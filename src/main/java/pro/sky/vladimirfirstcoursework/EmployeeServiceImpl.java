@@ -2,48 +2,44 @@ package pro.sky.vladimirfirstcoursework;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private List<Employee> employees = new ArrayList<>();
+    private Map<String, Employee> employees = new HashMap();
 
     @Override
     public Employee addEmployee(String firstName, String lastName) {
-        for (int i = 0; i < employees.size(); i++) {
-            if (Objects.equals(firstName, employees.get(i).getFirstName())
-                    && Objects.equals(lastName, employees.get(i).getLastName())) {
-                throw new EmployeeAlreadyAddedException();
-            }
-        }
         Employee employee = new Employee(firstName, lastName);
-        employees.add(employee);
+        if (!(employees.containsKey(firstName + lastName))) {
+        employees.put(firstName + lastName, employee);
         return employee;
+        } else {
+            throw new EmployeeAlreadyAddedException();
+        }
     }
 
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
-        employees.remove(findEmployee(firstName, lastName));
+        if (employees.containsKey(firstName + lastName)) {
+        employees.remove(firstName + lastName);
         return findEmployee(firstName, lastName);
+        } else {
+            throw new EmployeeNotFoundException();
+        }
     }
 
     @Override
     public Employee findEmployee(String firstName, String lastName) {
-        Employee employee;
-        for (int i = 0; i < employees.size(); i++) {
-            if (!(employees.get(i) != null
-                    && Objects.equals(firstName, employees.get(i).getFirstName())
-                    && Objects.equals(lastName, employees.get(i).getLastName()))) {
-            }
-            employee = employees.get(i);
-            return employee;
+        if (employees.containsKey(firstName + lastName)) {
+            return employees.get(firstName + lastName);
+        } else {
+            throw new EmployeeNotFoundException();
         }
-        throw new EmployeeNotFoundException();
     }
+
     @Override
-    public List<Employee> getAllEmployee(){
-        return new ArrayList<>(employees);
+    public Map<String, Employee> getAllEmployee() {
+        return new HashMap<>(employees);
     }
 }
