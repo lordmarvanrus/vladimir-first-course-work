@@ -9,11 +9,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     private Map<String, Employee> employees = new HashMap();
 
     @Override
-    public Employee addEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
+    public Employee addEmployee(String firstName, String lastName, int group, double salary) {
+        Employee employee = new Employee(firstName, lastName, group, salary);
         if (!(employees.containsKey(firstName + lastName))) {
-        employees.put(firstName + lastName, employee);
-        return employee;
+            employees.put(firstName + lastName, employee);
+            return employee;
         } else {
             throw new EmployeeAlreadyAddedException();
         }
@@ -22,8 +22,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
         if (employees.containsKey(firstName + lastName)) {
-        employees.remove(firstName + lastName);
-        return findEmployee(firstName, lastName);
+            employees.remove(firstName + lastName);
+            return findEmployee(firstName, lastName);
         } else {
             throw new EmployeeNotFoundException();
         }
@@ -39,7 +39,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Map<String, Employee> getAllEmployee() {
-        return new HashMap<>(employees);
+    public List<Employee> getAllEmployee() {
+        return new ArrayList<>(employees.values());
     }
 }
+
