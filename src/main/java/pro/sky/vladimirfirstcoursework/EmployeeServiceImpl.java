@@ -1,5 +1,6 @@
 package pro.sky.vladimirfirstcoursework;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -10,6 +11,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(String firstName, String lastName, int group, double salary) {
+        formName(firstName);
+        formName(lastName);
         Employee employee = new Employee(firstName, lastName, group, salary);
         if (!(checkEmployeeKey(firstName, lastName))) {
             employees.put(firstName + lastName, employee);
@@ -49,6 +52,16 @@ public class EmployeeServiceImpl implements EmployeeService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public String formName(String str) {
+        if (StringUtils.isAlpha(str)) {
+            StringUtils.lowerCase(str);
+            StringUtils.capitalize(str);
+            return str;
+        } else {
+            throw new RuntimeException();
         }
     }
 }
